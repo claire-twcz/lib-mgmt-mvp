@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# Don't upload these files to GitHub
 node_modules
 .env
 .env.local
