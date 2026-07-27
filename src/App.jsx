@@ -1,36 +1,35 @@
-import { useEffect } from 'react'
-import { supabase } from './services/supabaseClient'
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+import Dashboard from "./pages/Dashboard";
+import Books from "./pages/Books";
+import Borrowers from "./pages/Borrowers";
+import Transactions from "./pages/Transactions";
+import Overdue from "./pages/Overdue";
 
 function App() {
-
-  useEffect(() => {
-
-    async function testConnection() {
-      console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL)
-      console.log('Supabase Key Exists:', !!import.meta.env.VITE_SUPABASE_ANON_KEY)
-
-      const { data, error } = await supabase
-        .from('books')
-        .select('*')
-
-      console.log('Books:', data)
-
-      if (error) {
-        console.error('Error:', error)
-      }
-
-    }
-
-    testConnection()
-
-  }, [])
-
   return (
-    <div>
+    <BrowserRouter>
+
       <h1>Library Management MVP</h1>
-      <p>Testing Supabase Connection</p>
-    </div>
-  )
+
+      <nav style={{ marginBottom: "20px" }}>
+        <Link to="/">Dashboard</Link> |{" "}
+        <Link to="/books">Books</Link> |{" "}
+        <Link to="/borrowers">Borrowers</Link> |{" "}
+        <Link to="/transactions">Transactions</Link> |{" "}
+        <Link to="/overdue">Overdue</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/books" element={<Books />} />
+        <Route path="/borrowers" element={<Borrowers />} />
+        <Route path="/transactions" element={<Transactions />} />
+        <Route path="/overdue" element={<Overdue />} />
+      </Routes>
+
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
