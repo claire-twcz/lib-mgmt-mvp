@@ -67,3 +67,20 @@ export async function deleteBook(id) {
     .delete()
     .eq("id", id);
 }
+
+/*Reduce available quantity*/
+
+export async function updateAvailableQuantity(
+  id,
+  quantity
+) {
+
+  return await supabase
+    .from("books")
+    .update({
+      available_quantity:
+        quantity
+    })
+    .eq("id", id);
+
+}
