@@ -235,25 +235,13 @@ function Books() {
     loadBooks();
   }
 
-  //Button styles 
-  const primaryButton = {
-    backgroundColor: "#2563eb",
-    color: "white",
-    border: "none",
-    padding: "10px 16px",
-    borderRadius: "6px",
-    cursor: "pointer"
-  };    
-
   return (
-    <div
-      style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px"
-      }}
-    >
-      
+    <div style={{ padding: "20px" }}>
+      <h2>Books Module</h2>
+
+      <p>
+        This page allows the admin to manage the library book inventory.
+      </p>
 
       {/* ---------------- Add Book Form ---------------- */}
 
@@ -265,7 +253,7 @@ function Books() {
           borderRadius: "8px",
         }}
       >
-        <h3>新增書籍</h3>
+        <h3>Add Book</h3>
 
         <div style={{ marginBottom: "10px" }}>
           <label>Title</label>
@@ -327,7 +315,7 @@ function Books() {
           />
         </div>
 
-        <button onClick={handleAddBook} style={primaryButton}>
+        <button onClick={handleAddBook}>
           Add Book
         </button>
       </section>
@@ -335,7 +323,7 @@ function Books() {
       {/* ---------------- Search Box ---------------- */}
 
       <section style={{ marginBottom: "20px" }}>
-        <h3>書籍列表</h3>
+        <h3>Book List</h3>
 
         <input
           type="text"
@@ -394,14 +382,13 @@ function Books() {
               <div style={{ marginTop: "10px" }}>
                 <button
                   onClick={() => handleEditBook(book)}
-                  style={primaryButton}
+                  style={{ marginRight: "8px" }}
                 >
                   Edit
                 </button>
 
                 <button
                   onClick={() => handleDeleteBook(book.id)}
-                  style={primaryButton}
                 >
                   Delete
                 </button>

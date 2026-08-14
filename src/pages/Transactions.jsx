@@ -24,9 +24,6 @@ function Transactions() {
   const [selectedBook, setSelectedBook] = useState("");
   const [selectedBorrower, setSelectedBorrower] = useState("");
 
-  const [bookSearchTerm, setBookSearchTerm] = useState("");
-  const [selectedBookObject, setSelectedBookObject] = useState(null);
-
   async function loadBooks() {
 
     const { data, error } =
@@ -149,9 +146,7 @@ function Transactions() {
     await loadTransactions();
 
     setSelectedBook("");
-    setSelectedBookObject(null);
     setSelectedBorrower("");
-    setBookSearchTerm("");
 
     alert("Book borrowed!");
   }
@@ -207,67 +202,11 @@ function Transactions() {
 
   }, []);
 
-  const filteredBooksForBorrow =
-  books.filter((book) => {
-
-    const search =
-      bookSearchTerm.toLowerCase();
-
-    const title =
-      book.title
-        ?.toLowerCase() || "";
-
-    const author =
-      book.author
-        ?.toLowerCase() || "";
-
-    const isbn =
-      book.isbn
-        ?.toLowerCase() || "";
-
-    const publisher =
-      book.publisher
-        ?.toLowerCase() || "";
-
-    return (
-      title.includes(search) ||
-      author.includes(search) ||
-      isbn.includes(search) ||
-      publisher.includes(search)
-    );
-  });
-
-
-  //Button style
-  const primaryButton = {
-  backgroundColor: "#2563eb",
-  color: "white",
-  border: "none",
-  padding: "10px 16px",
-  borderRadius: "6px",
-  cursor: "pointer"
-};
-
-  const disabledButton = {
-  backgroundColor: "#9ca3af",
-  color: "white",
-  border: "none",
-  padding: "10px 16px",
-  borderRadius: "6px",
-  cursor: "not-allowed"
-};
-
-
-
   return (
 
-    <div
-      style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px"
-      }}
-    >
+    <div>
+
+      <h2>Transactions Module</h2>
 
       <p>
         Active Loans: {
@@ -277,149 +216,31 @@ function Transactions() {
         }
       </p>
 
-      <h3>Search Book</h3>
+      <h3>Select Book</h3>
 
-      <input
-        type="text"
-        placeholder="Search by book code, title, author, ISBN, or publisher..."
-        value={bookSearchTerm}
+      <select
+        value={selectedBook}
         onChange={(e) =>
-          setBookSearchTerm(e.target.value)
+          setSelectedBook(
+            e.target.value
+          )
         }
-        style={{
-          width: "500px",
-          padding: "8px",
-          marginBottom: "12px"
-        }}
-      />
+      >
+        <option value="">
+          Select Book
+        </option>
 
-        {bookSearchTerm && (
+        {books.map((book) => (
 
-  <div
-    style={{
-      border: "1px solid #ddd",
-      padding: "12px",
-      borderRadius: "8px",
-      marginBottom: "20px",
-      backgroundColor: "#fafafa"
-    }}
-  >
-
-    <h4>Matching Books</h4>
-
-    {filteredBooksForBorrow.length === 0 ? (
-
-      <p>No matching books found.</p>
-
-    ) : (
-
-      filteredBooksForBorrow
-        .slice(0, 10)
-        .map((book) => (
-
-          <div
+          <option
             key={book.id}
-            style={{
-              borderBottom: "1px solid #eee",
-              padding: "10px 0"
-            }}
+            value={book.id}
           >
+            {book.book_code} - {book.title}
+          </option>
 
-            <strong>
-              {book.book_code}
-            </strong>
-
-            {" - "}
-
-            {book.title}
-
-            <br />
-
-            <span>
-              Author: {book.author || "N/A"}
-            </span>
-
-            <br />
-
-            <span>
-              Available: {book.available_quantity}
-            </span>
-
-            <br />
-
-            <button
-              onClick={() => {
-                setSelectedBook(book.id);
-                setSelectedBookObject(book);
-                setBookSearchTerm("");
-              }}
-              disabled={book.available_quantity <= 0}
-              style={
-                book.available_quantity <= 0
-                  ? disabledButton
-                  : primaryButton
-              }
->
-              {book.available_quantity <= 0
-                ? "Not Available"
-                : "Select This Book"}
-</button>
-
-          </div>
-
-        ))
-
-    )}
-
-  </div>
-
-)}
-
-   {selectedBookObject && (
-
-  <div
-    style={{
-      border: "1px solid #bfdbfe",
-      padding: "12px",
-      borderRadius: "8px",
-      backgroundColor: "#eff6ff",
-      marginBottom: "20px"
-    }}
-  >
-
-    <h4>Selected Book</h4>
-
-    <p>
-      <strong>
-        {selectedBookObject.book_code}
-      </strong>
-
-      {" - "}
-
-      {selectedBookObject.title}
-    </p>
-
-    <p>
-      Author: {selectedBookObject.author || "N/A"}
-    </p>
-
-    <p>
-      Available Quantity: {selectedBookObject.available_quantity}
-    </p>
-
-    <button
-      onClick={() => {
-        setSelectedBook("");
-        setSelectedBookObject(null);
-      }}
-    >
-      Clear Selection
-    </button>
-
-  </div>
-
-)}   
-
+        ))}
+      </select>
 
       <br />
       <br />
@@ -455,14 +276,13 @@ function Transactions() {
 
       <button
         onClick={handleBorrow}
-        style={primaryButton}
       >
         Borrow Book
       </button>
 
       <hr />
 
-      <h3>借出中</h3>
+      <h3>Current Loans</h3>
 
       {transactions
         .filter(
@@ -516,8 +336,11 @@ function Transactions() {
             <br />
 
             <button
-              onClick={() => handleReturn(transaction)}
-              style={primaryButton}
+              onClick={() =>
+                handleReturn(
+                  transaction
+                )
+              }
             >
               Return Book
             </button>

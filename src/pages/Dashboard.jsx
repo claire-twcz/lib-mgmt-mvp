@@ -44,15 +44,9 @@ function Dashboard() {
   }).length;
 
   return (
-    <div
-      style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px"
-      }}
-    >
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}>
       <div>
-        
+        <h2>Dashboard Page</h2>
         <div
           style={{
             border: "1px solid #ddd",
@@ -61,13 +55,13 @@ function Dashboard() {
             minWidth: "180px",
           }}
         >
-          <h3>📚館藏</h3>
+          <h3>📚 Total Books</h3>
           <h1>{totalBooks}</h1>
         </div>
       </div>
 
       <div>
-        
+        <h2>Dashboard Page</h2>
         <div
           style={{
             border: "1px solid #ddd",
@@ -76,13 +70,13 @@ function Dashboard() {
             minWidth: "180px",
           }}
         >
-          <h3>👥借閱使用者</h3>
+          <h3>👥 Borrowers</h3>
           <h1>{totalBorrowers}</h1>
         </div>
       </div>
 
       <div>
-        
+        <h2>Dashboard Page</h2>
         <div
           style={{
             border: "1px solid #ddd",
@@ -91,13 +85,13 @@ function Dashboard() {
             minWidth: "180px",
           }}
         >
-          <h3>🔄借出中</h3>
+          <h3>🔄 Active Loans</h3>
           <h1>{activeLoans}</h1>
         </div>
       </div>
 
       <div>
-        
+        <h2>Dashboard Page</h2>
         <div
           style={{
             border: "1px solid #ddd",
@@ -106,7 +100,7 @@ function Dashboard() {
             minWidth: "180px",
           }}
         >
-          <h3>⏰逾期書籍</h3>
+          <h3>⏰Overdue Books</h3>
           <h1>{overdueBooks}</h1>
         </div>
 

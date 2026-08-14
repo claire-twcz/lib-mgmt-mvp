@@ -111,19 +111,13 @@ function Overdue() {
 
   return (
 
-    <div
-      style={{
-      maxWidth: "1200px",
-      margin: "0 auto",
-      padding: "20px"
-      }}
-    >
+    <div>
 
-      <h2>⏰逾期書籍</h2>
+      <h2>⏰ Overdue Books</h2>
 
       {overdueLoans.length === 0 ? (
 
-        <p>無逾期書籍</p>
+        <p>No overdue books.</p>
 
       ) : (
 
@@ -155,7 +149,7 @@ function Overdue() {
 
               <br />
 
-              借閱者:
+              Borrower:
               {" "}
               {t.borrowers?.full_name}
 
