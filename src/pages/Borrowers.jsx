@@ -203,15 +203,27 @@ function Borrowers() {
       );
     });
 
+// Button styles
+  const primaryButton = {
+    backgroundColor: "#2563eb",
+    color: "white",
+    border: "none",
+    padding: "10px 16px",
+    borderRadius: "6px",
+    cursor: "pointer"
+  };
+
+
+
   return (
-    <div style={{ padding: "20px" }}>
-
-      <h2>Borrowers Module</h2>
-
-      <p>
-        Manage library members who can borrow books.
-      </p>
-
+    <div
+      style={{
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "20px"
+      }}
+    >
+      
       {/* Add Borrower */}
 
       <section
@@ -223,7 +235,7 @@ function Borrowers() {
         }}
       >
 
-        <h3>Add Borrower</h3>
+        <h3>新增借閱使用者</h3>
 
         <div style={{ marginBottom: "10px" }}>
           <label>Full Name</label>
@@ -301,7 +313,7 @@ function Borrowers() {
           />
         </div>
 
-        <button onClick={handleAddBorrower}>
+        <button onClick={handleAddBorrower} style={primaryButton}>
           Add Borrower
         </button>
 
@@ -311,7 +323,7 @@ function Borrowers() {
 
       <section>
 
-        <h3>Borrower List</h3>
+        <h3>借閱使用者清單</h3>
 
         <input
           type="text"
@@ -371,6 +383,7 @@ function Borrowers() {
                     borrower
                   )
                 }
+                style={primaryButton}
               >
                 Edit
               </button>
@@ -381,9 +394,7 @@ function Borrowers() {
                     borrower.id
                   )
                 }
-                style={{
-                  marginLeft: "8px"
-                }}
+                style={primaryButton}
               >
                 Delete
               </button>

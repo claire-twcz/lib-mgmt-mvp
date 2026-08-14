@@ -10,14 +10,14 @@ function App() {
   return (
     <BrowserRouter>
 
-      <h1>Library Management MVP</h1>
+      <h1>捷克繁體中文圖書館借閱系統</h1>
 
       <nav style={{ marginBottom: "20px" }}>
-        <Link to="/">Dashboard</Link> |{" "}
-        <Link to="/books">Books</Link> |{" "}
-        <Link to="/borrowers">Borrowers</Link> |{" "}
-        <Link to="/transactions">Transactions</Link> |{" "}
-        <Link to="/overdue">Overdue</Link>
+        <Link to="/">📊總覽</Link> |{" "}
+        <Link to="/books">📚館藏</Link> |{" "}
+        <Link to="/borrowers">👥借閱使用者</Link> |{" "}
+        <Link to="/transactions">🔄借閱流程</Link> |{" "}
+        <Link to="/overdue">⏰逾期書籍</Link>
       </nav>
 
       <Routes>
