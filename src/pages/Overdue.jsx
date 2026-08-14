@@ -1,166 +1,194 @@
 import { useState, useEffect } from "react";
-
-import {
-  getTransactions
-} from "../services/transactionService";
+import { getTransactions } from "../services/transactionService";
 
 function Overdue() {
-  const [transactions, setTransactions] = useState([]);
-  const [sendingId, setSendingId] = useState(null);
 
-  async function loadTransactions() {
-    const { data, error } = await getTransactions();
-
-    if (error) {
-      console.error("Error loading transactions:", error);
-      return;
-    }
-
-    setTransactions(data || []);
-  }
+  const [transactions, setTransactions] =
+    useState([]);
 
   useEffect(() => {
-    loadTransactions();
+
+    async function loadData() {
+
+      const { data, error } =
+        await getTransactions();
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      setTransactions(data || []);
+    }
+
+    loadData();
+
   }, []);
 
   const today = new Date();
 
-  const overdueLoans = transactions.filter((transaction) => {
-    if (transaction.status !== "Borrowed") {
-      return false;
-    }
+  const overdueLoans =
+    transactions.filter((t) => {
 
-    return new Date(transaction.due_date) < today;
-  });
+      if (
+        t.status !== "Borrowed"
+      ) {
+        return false;
+      }
 
-  async function handleSendReminder(transaction) {
-    const borrowerName = transaction.borrowers?.full_name;
-    const borrowerEmail = transaction.borrowers?.email;
-    const bookTitle = transaction.books?.title;
-    const dueDate = transaction.due_date;
+      return (
+        new Date(t.due_date) < today
+      );
+    });
 
-    if (!borrowerEmail) {
-      alert("This borrower does not have an email address.");
+  async function handleSendReminder(transaction) 
+  {
+
+  try {
+
+    const response =
+      await fetch(
+        "/api/sendReminder",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+
+            borrowerName:
+              transaction.borrowers?.full_name,
+
+            borrowerEmail:
+              transaction.borrowers?.email,
+
+            bookTitle:
+              transaction.books?.title,
+
+            dueDate:
+              transaction.due_date
+
+          })
+
+        }
+      );
+
+    const result =
+      await response.json();
+
+    if (!response.ok) {
+
+      alert(
+        result.message ||
+        "Email未成功送出"
+      );
+
       return;
     }
 
-    setSendingId(transaction.id);
+    alert(
+      "提醒信件已成功送出"
+    );
 
-    try {
-      const response = await fetch("/api/sendReminder", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          borrowerName,
-          borrowerEmail,
-          bookTitle,
-          dueDate
-        })
-      });
+  } catch (error) {
 
-      const result = await response.json();
+    console.error(error);
 
-      if (!response.ok) {
-        alert(
-          result.message ||
-          "Failed to send reminder."
-        );
-        return;
-      }
+    alert(
+      "Unexpected error occurred."
+    );
 
-      alert("Reminder email sent successfully.");
-    } catch (error) {
-      console.error("Email sending error:", error);
-      alert("Unexpected error while sending reminder.");
-    } finally {
-      setSendingId(null);
-    }
   }
 
+}
+
+
+
+
+
   return (
+
     <div
       style={{
-        maxWidth: "1200px",
-        margin: "0 auto",
-        padding: "20px"
+      maxWidth: "1200px",
+      margin: "0 auto",
+      padding: "20px"
       }}
     >
 
+      <h2>⏰逾期書籍</h2>
+
       {overdueLoans.length === 0 ? (
-        <p>No overdue books.</p>
+
+        <p>無逾期書籍</p>
+
       ) : (
-        overdueLoans.map((transaction) => {
-          const daysOverdue = Math.floor(
-            (today - new Date(transaction.due_date)) /
-            (1000 * 60 * 60 * 24)
-          );
+
+        overdueLoans.map((t) => {
+
+          const daysOverdue =
+            Math.floor(
+              (today - new Date(t.due_date))
+              /
+              (1000 * 60 * 60 * 24)
+            );
 
           return (
+
             <div
-              key={transaction.id}
+              key={t.id}
               style={{
-                border: "1px solid #fecaca",
-                padding: "16px",
-                marginBottom: "12px",
-                borderRadius: "10px",
+                border: "1px solid #ddd",
+                padding: "12px",
+                marginBottom: "10px",
+                borderRadius: "8px",
                 backgroundColor: "#fff5f5"
               }}
             >
-              <h3 style={{ marginTop: "0" }}>
-                📖 {transaction.books?.title || "Unknown Book"}
-              </h3>
 
-              <p>
-                <strong>Borrower:</strong>{" "}
-                {transaction.borrowers?.full_name || "Unknown Borrower"}
-              </p>
+              <strong>
+                {t.books?.title}
+              </strong>
 
-              <p>
-                <strong>Email:</strong>{" "}
-                {transaction.borrowers?.email || "No email available"}
-              </p>
+              <br />
 
-              <p>
-                <strong>Due Date:</strong>{" "}
-                {transaction.due_date}
-              </p>
+              借閱者:
+              {" "}
+              {t.borrowers?.full_name}
 
-              <p>
-                <strong>Days Overdue:</strong>{" "}
-                {daysOverdue}
-              </p>
+              <br />
 
+              到期日期:
+              {" "}
+              {t.due_date}
+
+              <br />
+              <br />
               <button
                 onClick={() =>
-                  handleSendReminder(transaction)
+                  handleSendReminder(t)
                 }
-                disabled={sendingId === transaction.id}
-                style={{
-                  backgroundColor:
-                    sendingId === transaction.id
-                      ? "#9ca3af"
-                      : "#dc2626",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 16px",
-                  borderRadius: "6px",
-                  cursor:
-                    sendingId === transaction.id
-                      ? "not-allowed"
-                      : "pointer"
-                }}
               >
-                {sendingId === transaction.id
-                  ? "Sending..."
-                  : "Send Reminder"}
+                發送提醒
               </button>
+
+              逾期天數:
+              {" "}
+              {daysOverdue}
+
             </div>
+
           );
+
         })
+
       )}
+
     </div>
+
   );
 }
 
